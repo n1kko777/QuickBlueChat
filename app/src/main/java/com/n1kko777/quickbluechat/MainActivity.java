@@ -180,15 +180,15 @@ public class MainActivity extends AppCompatActivity {
                 }
                 break;
 
-//            case PICKFILE_RESULT_CODE:
-//                if (resultCode == RESULT_OK) {
-//                    String FilePath = data.getData().getPath();
-//                    Uri uri = data.getData();
-//                    File myFile = new File(uri.getPath());
-//                    myFile.getAbsolutePath();
-//                    Log.i("Check",FilePath);
-//                }
-//                break;
+            case PICKFILE_RESULT_CODE:
+                if (resultCode == RESULT_OK) {
+                    String FilePath = data.getData().getPath();
+                    Uri uri = data.getData();
+                    File myFile = new File(uri.getPath());
+                    myFile.getAbsolutePath();
+                    Log.i("Check",FilePath);
+                }
+                break;
             case REQUEST_ENABLE_BT:
                 if (resultCode == Activity.RESULT_OK) {
                     setupChat();
@@ -235,24 +235,24 @@ public class MainActivity extends AppCompatActivity {
                 startActivity(in);
 
                 return true;
-//            case R.id.photo:
-//                isExternalStorageWritable();
-//                if(connectedDeviceName!= null)
-//                {
-//                    isExternalStorageWritable();
-//                    Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
-//                    Uri data = Uri.fromFile(Environment.getExternalStorageDirectory());
-//                    String type = "image/*";
-//                    intent.setDataAndType(data, type);
-//                    startActivityForResult(intent,PICKFILE_RESULT_CODE);
-//
-//                }
-//                else
-//                {
-//                    Toast.makeText(MainActivity.this, "No one paired devices",Toast.LENGTH_SHORT).show();
-//                }
+            case R.id.photo:
+                isExternalStorageWritable();
+                if(connectedDeviceName!= null)
+                {
+                    isExternalStorageWritable();
+                    Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
+                    Uri data = Uri.fromFile(Environment.getExternalStorageDirectory());
+                    String type = "image/*";
+                    intent.setDataAndType(data, type);
+                    startActivityForResult(intent,PICKFILE_RESULT_CODE);
 
-//    return true;
+                }
+                else
+                {
+                    Toast.makeText(MainActivity.this, "No one paired devices",Toast.LENGTH_SHORT).show();
+                }
+
+    return true;
         }
 
 
@@ -322,6 +322,7 @@ public class MainActivity extends AppCompatActivity {
     private final void setStatus(CharSequence subTitle) {
         final ActionBar actionBar = getSupportActionBar();
         actionBar.setSubtitle(subTitle);
+
     }
 
     private void setupChat() {

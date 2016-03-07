@@ -8,9 +8,9 @@
     <item
         android:id="@+id/discoverable"
         android:title="@string/discoverable"/>
-    <!--<item-->
-        <!--android:id="@+id/photo"-->
-        <!--android:title="Send a Photo"/>-->
+    <item
+        android:id="@+id/photo"
+        android:title="@string/photo"/>
     <item
         android:id="@+id/inеfo"
         android:title="@string/inеfo"/>

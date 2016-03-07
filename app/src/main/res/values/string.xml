@@ -9,7 +9,7 @@
 
     <string name="bt_not_enabled_leaving">Bluetooth was not enabled. Leaving Bluetooth Chat.</string>
 
-    <string name="title_connecting">Connecting...</string>
+    <string name="title_connecting">Connecting</string>
 
 
     -<string name="title_connected_to">
@@ -20,7 +20,7 @@
 
     <string name="title_not_connected">Not connected</string>
 
-    <string name="scanning">Scanning for devices...</string>
+    <string name="scanning">Scanning for devices</string>
 
     <string name="select_device">select a device to connect</string>
 
@@ -47,5 +47,6 @@
     <string name="devor">Connected to </string>
 
     <string name="bd">Bluetooth is not available</string>
+    <string name="photo">Send a Photo</string>
 
 </resources>
