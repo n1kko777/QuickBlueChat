@@ -240,6 +240,7 @@ public class MainActivity extends AppCompatActivity {
                 if(connectedDeviceName!= null)
                 {
                     isExternalStorageWritable();
+                    String  hg;
                     Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
                     Uri data = Uri.fromFile(Environment.getExternalStorageDirectory());
                     String type = "image/*";
