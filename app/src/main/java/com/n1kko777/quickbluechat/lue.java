@@ -153,6 +153,7 @@ public class lue extends Activity {
                 if (device.getBondState() != BluetoothDevice.BOND_BONDED) {
                     newDevicesArrayAdapter.add(device.getName() + "\n"
                             + device.getAddress());
+
                 }
             } else if (BluetoothAdapter.ACTION_DISCOVERY_FINISHED
                     .equals(action)) {

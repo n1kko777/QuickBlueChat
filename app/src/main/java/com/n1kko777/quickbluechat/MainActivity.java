@@ -48,6 +48,9 @@ public class MainActivity extends AppCompatActivity {
     private static final int REQUEST_ENABLE_BT = 3;
     private static final int PICKFILE_RESULT_CODE = 123;
 
+    // The path to the "images" subdirectory
+    private File mImagesDir;
+
 
     private ListView lvMainChat;
     private EditText etMain;
@@ -82,6 +85,7 @@ public class MainActivity extends AppCompatActivity {
                             setStatus(getString(R.string.title_connected_to,
                                     connectedDeviceName));
                             chatArrayAdapter.clear();
+
                             break;
                         case com.n1kko777.quickbluechat.chatService.STATE_CONNECTING:
                             setStatus(R.string.title_connecting);
@@ -148,10 +152,6 @@ public class MainActivity extends AppCompatActivity {
         ensureDiscoverable();
     }
 
-    private void Test()
-    {
-        int i = 1+1;
-    }
 
     private void getWidgetReferences() {
         lvMainChat = (ListView) findViewById(R.id.lvMainChat);
@@ -179,16 +179,21 @@ public class MainActivity extends AppCompatActivity {
                     connectDevice(data, false);
                 }
                 break;
-
             case PICKFILE_RESULT_CODE:
-                if (resultCode == RESULT_OK) {
-                    String FilePath = data.getData().getPath();
-                    Uri uri = data.getData();
-                    File myFile = new File(uri.getPath());
-                    myFile.getAbsolutePath();
-                    Log.i("Check",FilePath);
-                }
+               String photo = data.getData().toString();
+                Log.i("photo", photo);
+                Intent iu = new Intent(Intent.ACTION_SEND);
+                Uri uri = data.getData();
+                iu.setType("image/*");
+                iu.putExtra(Intent.EXTRA_STREAM, uri);
+                iu.setPackage("com.android.bluetooth");
+
+                startActivity(iu);
+
+
+
                 break;
+
             case REQUEST_ENABLE_BT:
                 if (resultCode == Activity.RESULT_OK) {
                     setupChat();
@@ -205,6 +210,7 @@ public class MainActivity extends AppCompatActivity {
                 lue.DEVICE_ADDRESS);
         BluetoothDevice device = bluetoothAdapter.getRemoteDevice(address);
         chatService.connect(device, secure);
+
     }
 
     @Override
@@ -241,12 +247,9 @@ public class MainActivity extends AppCompatActivity {
                 {
                     isExternalStorageWritable();
 
-                    Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
-                    Uri data = Uri.fromFile(Environment.getExternalStorageDirectory());
-                    String type = "image/*";
-                    intent.setDataAndType(data, type);
-                    startActivityForResult(intent,PICKFILE_RESULT_CODE);
-
+                    Intent sharingIntent = new Intent(Intent.ACTION_PICK);
+                    sharingIntent.setType("image/*");
+                    startActivityForResult(sharingIntent,PICKFILE_RESULT_CODE);
                 }
                 else
                 {
@@ -259,7 +262,6 @@ public class MainActivity extends AppCompatActivity {
 
     return false;
     }
-
 
 
 
