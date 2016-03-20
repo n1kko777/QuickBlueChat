@@ -131,10 +131,6 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        FontsOverride.setDefaultFont(this, "MONOSPACE", "srvn.ttf");
-
-
-
         bluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
 
         getWidgetReferences();

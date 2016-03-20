@@ -40,8 +40,6 @@ public class lue extends Activity {
         super.onCreate(savedInstanceState);
         requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
         setContentView(R.layout.activity_lue);
-        FontsOverride.setDefaultFont(this, "MONOSPACE", "srvn.ttf");
-
 
         Toast.makeText(lue.this, R.string.tost, Toast.LENGTH_LONG).show();
 
