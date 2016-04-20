@@ -25,13 +25,16 @@
             android:layout_height="wrap_content"
             android:layout_gravity="bottom"
             android:layout_weight="1"
+            android:textSize="25dp"
             android:inputType="none" />
 
         <Button
             android:id="@+id/btnSend"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/send" />
+            android:typeface="serif"
+            android:text="@string/send"
+            android:textStyle="bold" />
     </LinearLayout>
 
 </LinearLayout>

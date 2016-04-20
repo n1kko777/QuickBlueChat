@@ -19,10 +19,11 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+
         android:textAppearance="?android:attr/textAppearanceLarge"
-        android:text="QuickBluetoothChat       Designed by N1KKO777"
+        android:text="QuickBluetoothChat Designed by N1KKO777"
         android:id="@+id/textView"
         android:layout_gravity="center_horizontal|bottom"
-        android:gravity="center_horizontal"
-        android:textStyle="bold" />
+        android:textStyle="bold"
+        android:gravity="center_vertical|center_horizontal" />
 </FrameLayout>

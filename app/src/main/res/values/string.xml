@@ -48,5 +48,6 @@
 
     <string name="bd">Bluetooth is not available</string>
     <string name="photo">Send a Photo</string>
+    <string name="file">Send a File</string>
 
 </resources>

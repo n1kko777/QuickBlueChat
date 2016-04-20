@@ -125,6 +125,7 @@ public class MainActivity extends AppCompatActivity {
             return false;
         }
     });
+    private int gr;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -176,15 +177,32 @@ public class MainActivity extends AppCompatActivity {
                 }
                 break;
             case PICKFILE_RESULT_CODE:
-               String photo = data.getData().toString();
-                Log.i("photo", photo);
-                Intent iu = new Intent(Intent.ACTION_SEND);
-                Uri uri = data.getData();
-                iu.setType("image/*");
-                iu.putExtra(Intent.EXTRA_STREAM, uri);
-                iu.setPackage("com.android.bluetooth");
+                if (gr == 1)
+                {
+                    String photo = data.getData().toString();
+                    Log.i("photo", photo);
+                    Intent iu = new Intent(Intent.ACTION_SEND);
+                    iu.setType("image/*");
+                    Uri uri = data.getData();
+                    iu.putExtra(Intent.EXTRA_STREAM, uri);
+                    iu.setPackage("com.android.bluetooth");
 
-                startActivity(iu);
+                    startActivity(iu);
+                }
+                else
+                if(gr == 2)
+                {
+                    String photo = data.getData().toString();
+                    Log.i("file", photo);
+                    Intent iu = new Intent(Intent.ACTION_SEND);
+                    iu.setType("file/*");
+                    Uri uri = data.getData();
+                    iu.putExtra(Intent.EXTRA_STREAM, uri);
+                    iu.setPackage("com.android.bluetooth");
+
+                    startActivity(iu);
+                }
+
 
 
 
@@ -239,9 +257,11 @@ public class MainActivity extends AppCompatActivity {
                 return true;
             case R.id.photo:
                 isExternalStorageWritable();
+
                 if(connectedDeviceName!= null)
                 {
                     isExternalStorageWritable();
+                    gr = 1;
 
                     Intent sharingIntent = new Intent(Intent.ACTION_PICK);
                     sharingIntent.setType("image/*");
@@ -253,6 +273,23 @@ public class MainActivity extends AppCompatActivity {
                 }
 
     return true;
+            case R.id.file:
+                isExternalStorageWritable();
+                if(connectedDeviceName!= null)
+                {
+                    gr = 2;
+                    isExternalStorageWritable();
+
+                    Intent sharingIntent = new Intent(Intent.ACTION_GET_CONTENT);
+                    sharingIntent.setType("file/*");
+                    startActivityForResult(sharingIntent,PICKFILE_RESULT_CODE);
+                }
+                else
+                {
+                    Toast.makeText(MainActivity.this, "No one paired devices",Toast.LENGTH_SHORT).show();
+                }
+
+                return true;
         }
 
 
