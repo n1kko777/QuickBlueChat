@@ -50,16 +50,11 @@ public class MainActivity extends AppCompatActivity {
     private static final int REQUEST_ENABLE_BT = 3;
     private static final int PICKFILE_RESULT_CODE = 123;
 
-    // The path to the "images" subdirectory
-    private File mImagesDir;
-
-
     private ListView lvMainChat;
     private EditText etMain;
     private Button btnSend;
 
     private Intent serverIntent = null;
-    private Intent PhotoSend = null;
 
     private String connectedDeviceName = null;
     private ArrayAdapter<String> chatArrayAdapter;
