@@ -34,6 +34,7 @@ public class lue extends Activity {
 
 
     public static String DEVICE_ADDRESS = "deviceAddress";
+    private Button skip;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -60,6 +61,13 @@ public class lue extends Activity {
         lvDeviceListNewDevice = (ListView) findViewById(R.id.lvDeviceListNewDevice);
 
         btnDeviceListScan = (Button) findViewById(R.id.btnDeviceListScan);
+        skip = (Button) findViewById(R.id.skip);
+        skip.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
 
     }
 

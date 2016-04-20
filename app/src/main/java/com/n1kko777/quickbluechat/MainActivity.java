@@ -3,6 +3,7 @@ package com.n1kko777.quickbluechat;
 import android.app.Activity;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
+import android.content.ActivityNotFoundException;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
@@ -11,6 +12,7 @@ import android.net.Uri;
 import android.os.Environment;
 import android.os.Handler;
 import android.os.Message;
+import android.provider.MediaStore;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -125,8 +127,6 @@ public class MainActivity extends AppCompatActivity {
             return false;
         }
     });
-    private int gr;
-
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -177,21 +177,7 @@ public class MainActivity extends AppCompatActivity {
                 }
                 break;
             case PICKFILE_RESULT_CODE:
-                if (gr == 1)
-                {
-                    String photo = data.getData().toString();
-                    Log.i("photo", photo);
-                    Intent iu = new Intent(Intent.ACTION_SEND);
-                    iu.setType("image/*");
-                    Uri uri = data.getData();
-                    iu.putExtra(Intent.EXTRA_STREAM, uri);
-                    iu.setPackage("com.android.bluetooth");
 
-                    startActivity(iu);
-                }
-                else
-                if(gr == 2)
-                {
                     String photo = data.getData().toString();
                     Log.i("file", photo);
                     Intent iu = new Intent(Intent.ACTION_SEND);
@@ -201,12 +187,7 @@ public class MainActivity extends AppCompatActivity {
                     iu.setPackage("com.android.bluetooth");
 
                     startActivity(iu);
-                }
-
-
-
-
-                break;
+                   break;
 
             case REQUEST_ENABLE_BT:
                 if (resultCode == Activity.RESULT_OK) {
@@ -255,29 +236,11 @@ public class MainActivity extends AppCompatActivity {
                 startActivity(in);
 
                 return true;
-            case R.id.photo:
-                isExternalStorageWritable();
 
-                if(connectedDeviceName!= null)
-                {
-                    isExternalStorageWritable();
-                    gr = 1;
-
-                    Intent sharingIntent = new Intent(Intent.ACTION_PICK);
-                    sharingIntent.setType("image/*");
-                    startActivityForResult(sharingIntent,PICKFILE_RESULT_CODE);
-                }
-                else
-                {
-                    Toast.makeText(MainActivity.this, "No one paired devices",Toast.LENGTH_SHORT).show();
-                }
-
-    return true;
             case R.id.file:
                 isExternalStorageWritable();
                 if(connectedDeviceName!= null)
                 {
-                    gr = 2;
                     isExternalStorageWritable();
 
                     Intent sharingIntent = new Intent(Intent.ACTION_GET_CONTENT);
