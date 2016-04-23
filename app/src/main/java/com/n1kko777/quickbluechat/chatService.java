@@ -5,6 +5,7 @@ import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothServerSocket;
 import android.bluetooth.BluetoothSocket;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -148,6 +149,7 @@ public class chatService {
             msg.setData(bundle);
             handler.sendMessage(msg);
 
+
             setState(STATE_CONNECTED);
         }
 
@@ -238,6 +240,7 @@ public class chatService {
                 while (state != STATE_CONNECTED) {
                     try {
                         socket = serverSocket.accept();
+
                     } catch (IOException e) {
                         break;
                     }
@@ -256,6 +259,7 @@ public class chatService {
                                 case STATE_CONNECTED:
                                     // Either not ready or already connected. Terminate
                                     // new socket.
+
                                     try {
                                         socket.close();
                                     } catch (IOException e) {

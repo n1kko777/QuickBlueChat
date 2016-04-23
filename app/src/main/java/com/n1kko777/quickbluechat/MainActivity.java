@@ -143,6 +143,8 @@ public class MainActivity extends AppCompatActivity {
         startActivityForResult(serverIntent,
                 REQUEST_CONNECT_DEVICE_INSECURE);
         ensureDiscoverable();
+
+
     }
 
 
