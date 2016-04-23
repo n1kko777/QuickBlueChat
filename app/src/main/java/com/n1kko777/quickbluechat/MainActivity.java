@@ -33,6 +33,7 @@ import android.widget.Toast;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.ExecutionException;
 
 
 public class MainActivity extends AppCompatActivity {
@@ -172,17 +173,25 @@ public class MainActivity extends AppCompatActivity {
                 }
                 break;
             case PICKFILE_RESULT_CODE:
-
-                    String photo = data.getData().toString();
+                   try
+                 { String photo = data.getData().toString();
                     Log.i("file", photo);
                     Intent iu = new Intent(Intent.ACTION_SEND);
-                    iu.setType("file/*");
-                    Uri uri = data.getData();
-                    iu.putExtra(Intent.EXTRA_STREAM, uri);
-                    iu.setPackage("com.android.bluetooth");
+                     iu.setType("file/*");
+                     Uri uri = data.getData();
+                     iu.putExtra(Intent.EXTRA_STREAM, uri);
+                     iu.setPackage("com.android.bluetooth");
+                   startActivity(iu);
+                     sendMessage(photo);
 
-                    startActivity(iu);
-                   break;
+
+
+                }catch(Exception e) {
+                onResume();
+                Toast.makeText(this, "Please select a file.",
+                        Toast.LENGTH_SHORT).show();
+            }
+                break;
 
             case REQUEST_ENABLE_BT:
                 if (resultCode == Activity.RESULT_OK) {
