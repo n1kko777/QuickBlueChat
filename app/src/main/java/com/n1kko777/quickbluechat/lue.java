@@ -42,7 +42,7 @@ public class lue extends Activity {
         requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
         setContentView(R.layout.activity_lue);
 
-        Toast.makeText(lue.this, R.string.tost, Toast.LENGTH_LONG).show();
+        Toast.makeText(lue.this, getResources().getString(R.string.tost), Toast.LENGTH_LONG).show();
 
 
         setResult(Activity.RESULT_CANCELED);

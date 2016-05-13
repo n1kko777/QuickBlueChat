@@ -48,5 +48,10 @@
 
     <string name="bd">Bluetooth is not available</string>
     <string name="file">Send a File/Photo</string>
+    <string name="me">Me: </string>
+    <string name="ct">Connected to </string>
+    <string name="bina">Bluetooth is not available </string>
+    <string name="nopair">No one paired devices </string>
+
 
 </resources>

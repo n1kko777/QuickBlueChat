@@ -3,16 +3,11 @@ package com.n1kko777.quickbluechat;
 import android.app.Activity;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
-import android.content.ActivityNotFoundException;
 import android.content.Intent;
-import android.content.pm.PackageManager;
-import android.content.pm.ResolveInfo;
-import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Environment;
 import android.os.Handler;
 import android.os.Message;
-import android.provider.MediaStore;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -29,11 +24,6 @@ import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
-
-import java.io.File;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.concurrent.ExecutionException;
 
 
 public class MainActivity extends AppCompatActivity {
@@ -98,7 +88,7 @@ public class MainActivity extends AppCompatActivity {
                     byte[] writeBuf = (byte[]) msg.obj;
 
                     String writeMessage = new String(writeBuf);
-                    chatArrayAdapter.add("Me: " + writeMessage);
+                    chatArrayAdapter.add(getResources().getString(R.string.me) + writeMessage);
 
                     break;
                 case MESSAGE_READ:
@@ -111,7 +101,7 @@ public class MainActivity extends AppCompatActivity {
 
                     connectedDeviceName = msg.getData().getString(DEVICE_NAME);
                     Toast.makeText(getApplicationContext(),
-                            "Connected to " + connectedDeviceName,
+                            getResources().getString(R.string.ct)+" " + connectedDeviceName,
                             Toast.LENGTH_SHORT).show();
                     break;
                 case MESSAGE_TOAST:
@@ -134,7 +124,7 @@ public class MainActivity extends AppCompatActivity {
         bindEventHandler();
 
         if (bluetoothAdapter == null) {
-            Toast.makeText(this, "Bluetooth is not available",
+            Toast.makeText(this, getResources().getString(R.string.bina),
                     Toast.LENGTH_LONG).show();
             finish();
             return;
@@ -255,7 +245,7 @@ public class MainActivity extends AppCompatActivity {
                 }
                 else
                 {
-                    Toast.makeText(MainActivity.this, "No one paired devices",Toast.LENGTH_SHORT).show();
+                    Toast.makeText(MainActivity.this, getResources().getString(R.string.nopair),Toast.LENGTH_SHORT).show();
                 }
 
                 return true;
