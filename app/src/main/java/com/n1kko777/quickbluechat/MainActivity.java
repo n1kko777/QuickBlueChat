@@ -235,35 +235,35 @@ public class MainActivity extends AppCompatActivity {
                     connectDevice(data, false);
                 }
                 break;
-            case PICKFILE_RESULT_CODE:
-                   try
-                 { String photo = data.getData().toString();
-                    Log.i("file", photo);
-                    Intent iu = new Intent(Intent.ACTION_SEND);
-                     iu.setType("file/*");
-                     Uri uri = data.getData();
-                     iu.putExtra(Intent.EXTRA_STREAM, uri);
-                     iu.setPackage("com.android.bluetooth");
-                   startActivity(iu);
-                     sendMessage(photo);
-
-
-
-                }catch(Exception e) {
-                onResume();
-                Toast.makeText(this, "Please select a file.",
-                        Toast.LENGTH_SHORT).show();
-            }
-                break;
-
-            case REQUEST_ENABLE_BT:
-                if (resultCode == Activity.RESULT_OK) {
-                    setupChat();
-                } else {
-                    Toast.makeText(this, R.string.bt_not_enabled_leaving,
-                            Toast.LENGTH_SHORT).show();
-                    finish();
-                }
+//            case PICKFILE_RESULT_CODE:
+//                   try
+//                 { String photo = data.getData().toString();
+//                    Log.i("file", photo);
+//                    Intent iu = new Intent(Intent.ACTION_SEND);
+//                     iu.setType("file/*");
+//                     Uri uri = data.getData();
+//                     iu.putExtra(Intent.EXTRA_STREAM, uri);
+//                     iu.setPackage("com.android.bluetooth");
+//                   startActivity(iu);
+//                     sendMessage(photo);
+//
+//
+//
+//                }catch(Exception e) {
+//                onResume();
+//                Toast.makeText(this, "Please select a file.",
+//                        Toast.LENGTH_SHORT).show();
+//            }
+//                break;
+//
+//            case REQUEST_ENABLE_BT:
+//                if (resultCode == Activity.RESULT_OK) {
+//                    setupChat();
+//                } else {
+//                    Toast.makeText(this, R.string.bt_not_enabled_leaving,
+//                            Toast.LENGTH_SHORT).show();
+//                    finish();
+//                }
         }
     }
 
