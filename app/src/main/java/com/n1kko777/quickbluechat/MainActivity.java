@@ -342,16 +342,16 @@ public class MainActivity extends AppCompatActivity {
 
 
 
-    public boolean isExternalStorageWritable() {
-        String state = Environment.getExternalStorageState();
-        if (Environment.MEDIA_MOUNTED.equals(state)) {
-            Log.i("Check","True");
-            int i = 0;
-            return true;
-        }
-        Log.i("Check","True");
-        return false;
-    }
+//    public boolean isExternalStorageWritable() {
+//        String state = Environment.getExternalStorageState();
+//        if (Environment.MEDIA_MOUNTED.equals(state)) {
+//            Log.i("Check","True");
+//            int i = 0;
+//            return true;
+//        }
+//        Log.i("Check","True");
+//        return false;
+//    }
 
 
 
