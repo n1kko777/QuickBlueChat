@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<menu xmlns:android="http://schemas.android.com/apk/res/android" >
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
 
     <item
@@ -8,9 +9,15 @@
     <item
         android:id="@+id/discoverable"
         android:title="@string/discoverable"/>
+    <!--<item-->
+        <!--android:id="@+id/file"-->
+        <!--android:title="@string/file"/>-->
     <item
-        android:id="@+id/file"
-        android:title="@string/file"/>
+        android:id="@+id/action_check"
+        android:title="@string/action_check"
+        android:orderInCategory="200"
+        android:visible="true"
+        android:checkable="true"/>
     <item
         android:id="@+id/inеfo"
         android:title="@string/inеfo"/>

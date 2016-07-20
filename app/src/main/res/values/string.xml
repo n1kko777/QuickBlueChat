@@ -5,6 +5,10 @@
 
     <string name="send">Send</string>
 
+    <string name="reply_label">Reply</string>
+
+    <string name="action_check">Vibration</string>
+
     <string name="not_connected">You are not connected to a device</string>
 
     <string name="bt_not_enabled_leaving">Bluetooth was not enabled. Leaving Bluetooth Chat.</string>

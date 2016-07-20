@@ -1,6 +1,16 @@
 package com.n1kko777.quickbluechat;
 
 import android.app.Activity;
+import android.app.Notification;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
+import android.content.ClipData;
+import android.content.SharedPreferences;
+import android.graphics.BitmapFactory;
+import android.os.Vibrator;
+import android.support.v4.app.NotificationCompat;
+import android.support.v4.app.NotificationManagerCompat;
+import android.support.v4.app.NotificationCompat.WearableExtender;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.content.Intent;
@@ -8,6 +18,7 @@ import android.net.Uri;
 import android.os.Environment;
 import android.os.Handler;
 import android.os.Message;
+import android.support.v4.app.RemoteInput;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -28,6 +39,9 @@ import android.widget.Toast;
 
 public class MainActivity extends AppCompatActivity {
 
+    public static final int notificationId = 001;
+    private static final String EXTRA_VOICE_REPLY = "extra_voice_reply";
+
     public static final int MESSAGE_STATE_CHANGE = 1;
     public static final int MESSAGE_READ = 2;
     public static final int MESSAGE_WRITE = 3;
@@ -36,6 +50,8 @@ public class MainActivity extends AppCompatActivity {
 
     public static final String DEVICE_NAME = "device_name";
     public static final String TOAST = "toast";
+
+    private MenuItem item;
 
     private static final int REQUEST_CONNECT_DEVICE_INSECURE = 2;
     private static final int REQUEST_ENABLE_BT = 3;
@@ -53,12 +69,6 @@ public class MainActivity extends AppCompatActivity {
     private StringBuffer outStringBuffer;
     private BluetoothAdapter bluetoothAdapter = null;
     private com.n1kko777.quickbluechat.chatService chatService = null;
-
-
-
-
-
-
 
 
 
@@ -95,7 +105,67 @@ public class MainActivity extends AppCompatActivity {
                     byte[] readBuf = (byte[]) msg.obj;
 
                     String readMessage = new String(readBuf, 0, msg.arg1);
-                    chatArrayAdapter.add(connectedDeviceName + ":  " + readMessage);
+                    chatArrayAdapter.add(connectedDeviceName + ": " + readMessage);
+
+
+                    if(item.isChecked())
+                    {
+                        Vibrator vb = (Vibrator) getSystemService(VIBRATOR_SERVICE);
+                        vb.vibrate(400);
+                    }
+
+
+
+                    NotificationCompat.Builder builder = new NotificationCompat.Builder(MainActivity.this);
+
+                    /** Set the icon that will appear in the notification bar. This icon also appears
+                     * in the lower right hand corner of the notification itself.
+                     *
+                     * Important note: although you can use any drawable as the small icon, Android
+                     * design guidelines state that the icon should be simple and monochrome. Full-color
+                     * bitmaps or busy images don't render well on smaller screens and can end up
+                     * confusing the user.
+                     */
+                    builder.setSmallIcon(R.drawable.logo);
+
+                    // Set the intent that will fire when the user taps the notification.
+                    builder.setContentIntent(null);
+
+                    // Set the notification to auto-cancel. This means that the notification will disappear
+                    // after the user taps it, rather than remaining until it's explicitly dismissed.
+                    builder.setAutoCancel(true);
+
+                    /**
+                     *Build the notification's appearance.
+                     * Set the large icon, which appears on the left of the notification. In this
+                     * sample we'll set the large icon to be the same as our app icon. The app icon is a
+                     * reasonable default if you don't have anything more compelling to use as an icon.
+                     */
+                    builder.setLargeIcon(BitmapFactory.decodeResource(getResources(), R.drawable.sad));
+
+                    /**
+                     * Set the text of the notification. This sample sets the three most commononly used
+                     * text areas:
+                     * 1. The content title, which appears in large type at the top of the notification
+                     * 2. The content text, which appears in smaller text below the title
+                     * 3. The subtext, which appears under the text on newer devices. Devices running
+                     *    versions of Android prior to 4.2 will ignore this field, so don't use it for
+                     *    anything vital!
+                     */
+                    builder.setContentTitle(connectedDeviceName);
+                    builder.setContentText(readMessage);
+
+                    // END_INCLUDE (build_notification)
+
+                    // BEGIN_INCLUDE(send_notification)
+                    /**
+                     * Send the notification. This will immediately display the notification icon in the
+                     * notification bar.
+                     */
+                    NotificationManager notificationManager = (NotificationManager) getSystemService(
+                            NOTIFICATION_SERVICE);
+                    notificationManager.notify(notificationId, builder.build());
+                    // END_INCLUDE(send_notification)
                     break;
                 case MESSAGE_DEVICE_NAME:
 
@@ -113,6 +183,8 @@ public class MainActivity extends AppCompatActivity {
             return false;
         }
     });
+
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -136,7 +208,6 @@ public class MainActivity extends AppCompatActivity {
 
 
     }
-
 
     private void getWidgetReferences() {
         lvMainChat = (ListView) findViewById(R.id.lvMainChat);
@@ -208,6 +279,10 @@ public class MainActivity extends AppCompatActivity {
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.option_menu, menu);
+        SharedPreferences settings = getSharedPreferences("settings", 0);
+        boolean isChecked = settings.getBoolean("checkbox", true);
+        item = menu.findItem(R.id.action_check);
+        item.setChecked(isChecked);
         return true;
     }
 
@@ -219,6 +294,15 @@ public class MainActivity extends AppCompatActivity {
 //                serverIntent = new Intent(this, lue.class);
 //                startActivityForResult(serverIntent, REQUEST_CONNECT_DEVICE_SECURE);
 //                return true;
+            case R.id.action_check:
+                item.setChecked(!item.isChecked());
+                SharedPreferences settings = getSharedPreferences("settings", 0);
+                SharedPreferences.Editor editor = settings.edit();
+                editor.putBoolean("checkbox", item.isChecked());
+                editor.commit();
+
+                return true;
+
             case R.id.insecure_connect_scan:
                 serverIntent = new Intent(this, lue.class);
                 startActivityForResult(serverIntent,
@@ -233,22 +317,22 @@ public class MainActivity extends AppCompatActivity {
 
                 return true;
 
-            case R.id.file:
-                isExternalStorageWritable();
-                if(connectedDeviceName!= null)
-                {
-                    isExternalStorageWritable();
-
-                    Intent sharingIntent = new Intent(Intent.ACTION_GET_CONTENT);
-                    sharingIntent.setType("file/*");
-                    startActivityForResult(sharingIntent,PICKFILE_RESULT_CODE);
-                }
-                else
-                {
-                    Toast.makeText(MainActivity.this, getResources().getString(R.string.nopair),Toast.LENGTH_SHORT).show();
-                }
-
-                return true;
+//            case R.id.file:
+//                isExternalStorageWritable();
+//                if(connectedDeviceName!= null)
+//                {
+//                    isExternalStorageWritable();
+//
+//                    Intent sharingIntent = new Intent(Intent.ACTION_GET_CONTENT);
+//                    sharingIntent.setType("file/*");
+//                    startActivityForResult(sharingIntent,PICKFILE_RESULT_CODE);
+//                }
+//                else
+//                {
+//                    Toast.makeText(MainActivity.this, getResources().getString(R.string.nopair),Toast.LENGTH_SHORT).show();
+//                }
+//
+//                return true;
         }
 
 
