@@ -6,8 +6,10 @@ import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.ClipData;
 import android.content.SharedPreferences;
+import android.database.Cursor;
 import android.graphics.BitmapFactory;
 import android.os.Vibrator;
+import android.provider.OpenableColumns;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.NotificationManagerCompat;
 import android.support.v4.app.NotificationCompat.WearableExtender;
@@ -36,11 +38,15 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.io.File;
+
 
 public class MainActivity extends AppCompatActivity {
 
     public static final int notificationId = 001;
     private static final String EXTRA_VOICE_REPLY = "extra_voice_reply";
+
+    private Intent sharingIntent;
 
     public static final int MESSAGE_STATE_CHANGE = 1;
     public static final int MESSAGE_READ = 2;
@@ -235,35 +241,40 @@ public class MainActivity extends AppCompatActivity {
                     connectDevice(data, false);
                 }
                 break;
-//            case PICKFILE_RESULT_CODE:
-//                   try
-//                 { String photo = data.getData().toString();
-//                    Log.i("file", photo);
-//                    Intent iu = new Intent(Intent.ACTION_SEND);
-//                     iu.setType("file/*");
-//                     Uri uri = data.getData();
-//                     iu.putExtra(Intent.EXTRA_STREAM, uri);
-//                     iu.setPackage("com.android.bluetooth");
-//                   startActivity(iu);
-//                     sendMessage(photo);
-//
-//
-//
-//                }catch(Exception e) {
-//                onResume();
-//                Toast.makeText(this, "Please select a file.",
-//                        Toast.LENGTH_SHORT).show();
-//            }
-//                break;
-//
-//            case REQUEST_ENABLE_BT:
-//                if (resultCode == Activity.RESULT_OK) {
-//                    setupChat();
-//                } else {
-//                    Toast.makeText(this, R.string.bt_not_enabled_leaving,
-//                            Toast.LENGTH_SHORT).show();
-//                    finish();
-//                }
+            case PICKFILE_RESULT_CODE:
+                   try
+                 {
+                    Intent iu = new Intent(Intent.ACTION_SEND);
+                     iu.setType("*/*");
+                     Uri uri = data.getData();
+
+                     Cursor returnCursor =
+                             getContentResolver().query(uri, null, null, null, null);
+
+                     int nameIndex = returnCursor.getColumnIndex(OpenableColumns.DISPLAY_NAME);
+                     returnCursor.moveToFirst();
+                     iu.putExtra(Intent.EXTRA_STREAM, uri);
+                     iu.setPackage("com.android.bluetooth");
+                   startActivity(iu);
+                     sendMessage(returnCursor.getString(nameIndex));
+
+
+
+                }catch(Exception e) {
+                onResume();
+                Toast.makeText(this, "Please select a file.",
+                        Toast.LENGTH_SHORT).show();
+            }
+                break;
+
+            case REQUEST_ENABLE_BT:
+                if (resultCode == Activity.RESULT_OK) {
+                    setupChat();
+                } else {
+                    Toast.makeText(this, R.string.bt_not_enabled_leaving,
+                            Toast.LENGTH_SHORT).show();
+                    finish();
+                }
         }
     }
 
@@ -317,22 +328,22 @@ public class MainActivity extends AppCompatActivity {
 
                 return true;
 
-//            case R.id.file:
-//                isExternalStorageWritable();
-//                if(connectedDeviceName!= null)
-//                {
-//                    isExternalStorageWritable();
-//
-//                    Intent sharingIntent = new Intent(Intent.ACTION_GET_CONTENT);
-//                    sharingIntent.setType("file/*");
-//                    startActivityForResult(sharingIntent,PICKFILE_RESULT_CODE);
-//                }
-//                else
-//                {
-//                    Toast.makeText(MainActivity.this, getResources().getString(R.string.nopair),Toast.LENGTH_SHORT).show();
-//                }
-//
-//                return true;
+            case R.id.file:
+                isExternalStorageWritable();
+                if(connectedDeviceName!= null)
+                {
+                    isExternalStorageWritable();
+
+                     sharingIntent = new Intent(Intent.ACTION_GET_CONTENT);
+                    sharingIntent.setType("*/*");
+                    startActivityForResult(sharingIntent,PICKFILE_RESULT_CODE);
+                }
+                else
+                {
+                    Toast.makeText(MainActivity.this, getResources().getString(R.string.nopair),Toast.LENGTH_SHORT).show();
+                }
+
+                return true;
         }
 
 
@@ -342,16 +353,16 @@ public class MainActivity extends AppCompatActivity {
 
 
 
-//    public boolean isExternalStorageWritable() {
-//        String state = Environment.getExternalStorageState();
-//        if (Environment.MEDIA_MOUNTED.equals(state)) {
-//            Log.i("Check","True");
-//            int i = 0;
-//            return true;
-//        }
-//        Log.i("Check","True");
-//        return false;
-//    }
+    public boolean isExternalStorageWritable() {
+        String state = Environment.getExternalStorageState();
+        if (Environment.MEDIA_MOUNTED.equals(state)) {
+            Log.i("Check","True");
+            int i = 0;
+            return true;
+        }
+        Log.i("Check","True");
+        return false;
+    }
 
 
 
