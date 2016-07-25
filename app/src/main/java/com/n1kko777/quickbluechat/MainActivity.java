@@ -4,10 +4,14 @@ import android.app.Activity;
 import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
+import android.content.BroadcastReceiver;
 import android.content.ClipData;
+import android.content.Context;
+import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.graphics.BitmapFactory;
+import android.graphics.drawable.RippleDrawable;
 import android.os.Vibrator;
 import android.provider.OpenableColumns;
 import android.support.v4.app.NotificationCompat;
@@ -21,9 +25,11 @@ import android.os.Environment;
 import android.os.Handler;
 import android.os.Message;
 import android.support.v4.app.RemoteInput;
+import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.Menu;
@@ -43,8 +49,9 @@ import java.io.File;
 
 public class MainActivity extends AppCompatActivity {
 
-    public static final int notificationId = 001;
-    private static final String EXTRA_VOICE_REPLY = "extra_voice_reply";
+    private static String readMessage = null;
+
+
 
     private Intent sharingIntent;
 
@@ -70,6 +77,7 @@ public class MainActivity extends AppCompatActivity {
     private Intent serverIntent = null;
 
     private String connectedDeviceName = null;
+
     private ArrayAdapter<String> chatArrayAdapter;
 
     private StringBuffer outStringBuffer;
@@ -77,7 +85,7 @@ public class MainActivity extends AppCompatActivity {
     private com.n1kko777.quickbluechat.chatService chatService = null;
 
 
-
+    private int notificationId = 1;
     private Handler handler = new Handler(new Handler.Callback() {
 
         @Override
@@ -110,7 +118,7 @@ public class MainActivity extends AppCompatActivity {
                 case MESSAGE_READ:
                     byte[] readBuf = (byte[]) msg.obj;
 
-                    String readMessage = new String(readBuf, 0, msg.arg1);
+                    readMessage = new String(readBuf, 0, msg.arg1);
                     chatArrayAdapter.add(connectedDeviceName + ": " + readMessage);
 
 
@@ -119,8 +127,6 @@ public class MainActivity extends AppCompatActivity {
                         Vibrator vb = (Vibrator) getSystemService(VIBRATOR_SERVICE);
                         vb.vibrate(400);
                     }
-
-
 
                     NotificationCompat.Builder builder = new NotificationCompat.Builder(MainActivity.this);
 
@@ -170,6 +176,7 @@ public class MainActivity extends AppCompatActivity {
                      */
                     NotificationManager notificationManager = (NotificationManager) getSystemService(
                             NOTIFICATION_SERVICE);
+
                     notificationManager.notify(notificationId, builder.build());
                     // END_INCLUDE(send_notification)
                     break;
@@ -195,6 +202,7 @@ public class MainActivity extends AppCompatActivity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
 
         bluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
 
@@ -467,5 +475,6 @@ public class MainActivity extends AppCompatActivity {
         if (chatService != null)
             chatService.stop();
     }
+
 
 }
