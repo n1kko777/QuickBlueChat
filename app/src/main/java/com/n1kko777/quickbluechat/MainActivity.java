@@ -137,8 +137,11 @@ public class MainActivity extends AppCompatActivity {
                             PendingIntent.getBroadcast(MainActivity.this, 0, demandIntent, 0);
 
                     String replyLabel = getResources().getString(R.string.reply_label);
+                    String[] replyChoices = getResources().getStringArray(R.array.reply_choices);
+
                     RemoteInput remoteInput = new RemoteInput.Builder(EXTRA_VOICE_REPLY)
                             .setLabel(replyLabel)
+                            .setChoices(replyChoices)
                             .build();
 
                     NotificationCompat.Action replyAction =
