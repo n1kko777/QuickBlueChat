@@ -6,4 +6,6 @@
         <item>Maybe</item>
     </string-array>
     <string name="disconnect">Disconnect</string>
+    <string name="label">Reply</string>
+    <string name="title_activity_reply">ReplyActivity</string>
 </resources>

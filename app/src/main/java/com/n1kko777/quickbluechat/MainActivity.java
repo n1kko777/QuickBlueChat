@@ -2,21 +2,14 @@ package com.n1kko777.quickbluechat;
 
 import android.app.Activity;
 import android.app.Notification;
-import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
-import android.content.ClipData;
 import android.content.Context;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.graphics.BitmapFactory;
-import android.graphics.drawable.RippleDrawable;
-import android.os.Vibrator;
 import android.provider.OpenableColumns;
-import android.support.v4.app.NotificationCompat;
-import android.support.v4.app.NotificationManagerCompat;
-import android.support.v4.app.NotificationCompat.WearableExtender;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.content.Intent;
@@ -24,12 +17,13 @@ import android.net.Uri;
 import android.os.Environment;
 import android.os.Handler;
 import android.os.Message;
+import android.support.v4.app.NotificationCompat;
+import android.support.v4.app.NotificationManagerCompat;
 import android.support.v4.app.RemoteInput;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.text.TextUtils;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.Menu;
@@ -44,14 +38,16 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import java.io.File;
+
 
 
 public class MainActivity extends AppCompatActivity {
 
     private static String readMessage = null;
 
-
+    public static final String ACTION_DEMAND = "com.androidweardocs.ACTION_DEMAND";
+    public static final String EXTRA_MESSAGE = "com.androidweardocs.EXTRA_MESSAGE";
+    public static final String EXTRA_VOICE_REPLY = "com.androidweardocs.EXTRA_VOICE_REPLY";
 
     private Intent sharingIntent;
 
@@ -76,7 +72,7 @@ public class MainActivity extends AppCompatActivity {
 
     private Intent serverIntent = null;
 
-    private String connectedDeviceName = null;
+    String connectedDeviceName = null;
 
     private ArrayAdapter<String> chatArrayAdapter;
 
@@ -84,8 +80,7 @@ public class MainActivity extends AppCompatActivity {
     private BluetoothAdapter bluetoothAdapter = null;
     private com.n1kko777.quickbluechat.chatService chatService = null;
 
-
-    private int notificationId = 1;
+    private int notificationId = 1 ;
     private Handler handler = new Handler(new Handler.Callback() {
 
         @Override
@@ -122,69 +117,67 @@ public class MainActivity extends AppCompatActivity {
                     chatArrayAdapter.add(connectedDeviceName + ": " + readMessage);
 
 
+
+
+                    long[] a;
                     if(item.isChecked())
                     {
-                        Vibrator vb = (Vibrator) getSystemService(VIBRATOR_SERVICE);
-                        vb.vibrate(400);
+                        a = new long[]{1000, 1000};
+                    }
+                    else
+                    {
+                        a = new long[]{0, 0};
                     }
 
-                    NotificationCompat.Builder builder = new NotificationCompat.Builder(MainActivity.this);
+                    Intent demandIntent = new Intent(MainActivity.this, DemandIntentReceiver.class)
+                            .putExtra(EXTRA_MESSAGE, "Reply selected.")
+                            .setAction(ACTION_DEMAND);
 
-                    /** Set the icon that will appear in the notification bar. This icon also appears
-                     * in the lower right hand corner of the notification itself.
-                     *
-                     * Important note: although you can use any drawable as the small icon, Android
-                     * design guidelines state that the icon should be simple and monochrome. Full-color
-                     * bitmaps or busy images don't render well on smaller screens and can end up
-                     * confusing the user.
-                     */
-                    builder.setSmallIcon(R.drawable.logo);
+                    PendingIntent demandPendingIntent =
+                            PendingIntent.getBroadcast(MainActivity.this, 0, demandIntent, 0);
 
-                    // Set the intent that will fire when the user taps the notification.
-                    builder.setContentIntent(null);
+                    String replyLabel = getResources().getString(R.string.reply_label);
+                    RemoteInput remoteInput = new RemoteInput.Builder(EXTRA_VOICE_REPLY)
+                            .setLabel(replyLabel)
+                            .build();
 
-                    // Set the notification to auto-cancel. This means that the notification will disappear
-                    // after the user taps it, rather than remaining until it's explicitly dismissed.
-                    builder.setAutoCancel(true);
+                    NotificationCompat.Action replyAction =
+                            new NotificationCompat.Action.Builder(R.drawable.ic_reply_icon,
+                                    getString(R.string.reply_label), demandPendingIntent)
+                                    .addRemoteInput(remoteInput)
+                                    .build();
 
-                    /**
-                     *Build the notification's appearance.
-                     * Set the large icon, which appears on the left of the notification. In this
-                     * sample we'll set the large icon to be the same as our app icon. The app icon is a
-                     * reasonable default if you don't have anything more compelling to use as an icon.
-                     */
-                    builder.setLargeIcon(BitmapFactory.decodeResource(getResources(), R.drawable.sad));
+                    NotificationCompat.WearableExtender wearableExtender =
+                            new NotificationCompat.WearableExtender()
+                                    .addAction(replyAction);
 
-                    /**
-                     * Set the text of the notification. This sample sets the three most commononly used
-                     * text areas:
-                     * 1. The content title, which appears in large type at the top of the notification
-                     * 2. The content text, which appears in smaller text below the title
-                     * 3. The subtext, which appears under the text on newer devices. Devices running
-                     *    versions of Android prior to 4.2 will ignore this field, so don't use it for
-                     *    anything vital!
-                     */
-                    builder.setContentTitle(connectedDeviceName);
-                    builder.setContentText(readMessage);
+                    Notification notification =
+                            new NotificationCompat.Builder(MainActivity.this)
+                                    .setContentTitle(connectedDeviceName)
+                                    .setContentText(readMessage)
+                                    .setSmallIcon(R.drawable.logo)
+                                    .setLargeIcon(BitmapFactory.decodeResource(getResources(), R.drawable.sad))
+                                    .setVibrate(a)
+                                    .extend(wearableExtender)
+                                    .build();
 
-                    // END_INCLUDE (build_notification)
+                    NotificationManagerCompat notificationManager =
+                            NotificationManagerCompat.from(MainActivity.this);
 
-                    // BEGIN_INCLUDE(send_notification)
-                    /**
-                     * Send the notification. This will immediately display the notification icon in the
-                     * notification bar.
-                     */
-                    NotificationManager notificationManager = (NotificationManager) getSystemService(
-                            NOTIFICATION_SERVICE);
+                    notificationManager.notify(notificationId, notification);
 
-                    notificationManager.notify(notificationId, builder.build());
-                    // END_INCLUDE(send_notification)
+                    // Register the local broadcast receiver for the users demand.
+                    IntentFilter messageFilter = new IntentFilter(Intent.ACTION_SEND);
+                    MessageReceiver messageReceiver = new MessageReceiver();
+                    LocalBroadcastManager.getInstance(MainActivity.this).
+
+                            registerReceiver(messageReceiver, messageFilter);
                     break;
                 case MESSAGE_DEVICE_NAME:
 
                     connectedDeviceName = msg.getData().getString(DEVICE_NAME);
                     Toast.makeText(getApplicationContext(),
-                            getResources().getString(R.string.ct)+" " + connectedDeviceName,
+                            getResources().getString(R.string.ct) + " " + connectedDeviceName,
                             Toast.LENGTH_SHORT).show();
                     break;
                 case MESSAGE_TOAST:
@@ -196,7 +189,6 @@ public class MainActivity extends AppCompatActivity {
             return false;
         }
     });
-
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -219,7 +211,6 @@ public class MainActivity extends AppCompatActivity {
         startActivityForResult(serverIntent,
                 REQUEST_CONNECT_DEVICE_INSECURE);
         ensureDiscoverable();
-
 
     }
 
@@ -250,29 +241,27 @@ public class MainActivity extends AppCompatActivity {
                 }
                 break;
             case PICKFILE_RESULT_CODE:
-                   try
-                 {
+                try {
                     Intent iu = new Intent(Intent.ACTION_SEND);
-                     iu.setType("*/*");
-                     Uri uri = data.getData();
+                    iu.setType("*/*");
+                    Uri uri = data.getData();
 
-                     Cursor returnCursor =
-                             getContentResolver().query(uri, null, null, null, null);
+                    Cursor returnCursor =
+                            getContentResolver().query(uri, null, null, null, null);
 
-                     int nameIndex = returnCursor.getColumnIndex(OpenableColumns.DISPLAY_NAME);
-                     returnCursor.moveToFirst();
-                     iu.putExtra(Intent.EXTRA_STREAM, uri);
-                     iu.setPackage("com.android.bluetooth");
-                   startActivity(iu);
-                     sendMessage(returnCursor.getString(nameIndex));
+                    int nameIndex = returnCursor.getColumnIndex(OpenableColumns.DISPLAY_NAME);
+                    returnCursor.moveToFirst();
+                    iu.putExtra(Intent.EXTRA_STREAM, uri);
+                    iu.setPackage("com.android.bluetooth");
+                    startActivity(iu);
+                    sendMessage(returnCursor.getString(nameIndex));
 
 
-
-                }catch(Exception e) {
-                onResume();
-                Toast.makeText(this, "Please select a file.",
-                        Toast.LENGTH_SHORT).show();
-            }
+                } catch (Exception e) {
+                    onResume();
+                    Toast.makeText(this, "Please select a file.",
+                            Toast.LENGTH_SHORT).show();
+                }
                 break;
 
             case REQUEST_ENABLE_BT:
@@ -309,10 +298,7 @@ public class MainActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
 
         switch (item.getItemId()) {
-//            case R.id.secure_connect_scan:
-//                serverIntent = new Intent(this, lue.class);
-//                startActivityForResult(serverIntent, REQUEST_CONNECT_DEVICE_SECURE);
-//                return true;
+
             case R.id.action_check:
                 item.setChecked(!item.isChecked());
                 SharedPreferences settings = getSharedPreferences("settings", 0);
@@ -338,41 +324,34 @@ public class MainActivity extends AppCompatActivity {
 
             case R.id.file:
                 isExternalStorageWritable();
-                if(connectedDeviceName!= null)
-                {
+                if (connectedDeviceName != null) {
                     isExternalStorageWritable();
 
-                     sharingIntent = new Intent(Intent.ACTION_GET_CONTENT);
+                    sharingIntent = new Intent(Intent.ACTION_GET_CONTENT);
                     sharingIntent.setType("*/*");
-                    startActivityForResult(sharingIntent,PICKFILE_RESULT_CODE);
-                }
-                else
-                {
-                    Toast.makeText(MainActivity.this, getResources().getString(R.string.nopair),Toast.LENGTH_SHORT).show();
+                    startActivityForResult(sharingIntent, PICKFILE_RESULT_CODE);
+                } else {
+                    Toast.makeText(MainActivity.this, getResources().getString(R.string.nopair), Toast.LENGTH_SHORT).show();
                 }
 
                 return true;
         }
 
 
-    return false;
+        return false;
     }
-
-
 
 
     public boolean isExternalStorageWritable() {
         String state = Environment.getExternalStorageState();
         if (Environment.MEDIA_MOUNTED.equals(state)) {
-            Log.i("Check","True");
+            Log.i("Check", "True");
             int i = 0;
             return true;
         }
-        Log.i("Check","True");
+        Log.i("Check", "True");
         return false;
     }
-
-
 
 
     private void ensureDiscoverable() {
@@ -385,7 +364,7 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    private void sendMessage(String message) {
+    public void sendMessage(String message) {
         if (chatService.getState() != com.n1kko777.quickbluechat.chatService.STATE_CONNECTED) {
             Toast.makeText(this, R.string.not_connected, Toast.LENGTH_SHORT)
                     .show();
@@ -464,6 +443,9 @@ public class MainActivity extends AppCompatActivity {
         super.onPause();
     }
 
+
+
+
     @Override
     public void onStop() {
         super.onStop();
@@ -477,4 +459,16 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
+    // Class to receive demand text from the wearable demand receiver
+    public class MessageReceiver extends BroadcastReceiver {
+
+        @Override
+        public void onReceive(Context context, Intent intent) {
+
+            // Display the received demand
+
+            String demand = intent.getStringExtra("reply");
+            sendMessage(demand);
+        }
+    }
 }
