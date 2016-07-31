@@ -17,7 +17,7 @@
     <string name="label">Ответ</string>
     <string name="me">Я:</string>
     <string name="none_found">Устройство не найдены</string>
-    <string name="none_paired">Устройства не были подклбчены</string>
+    <string name="none_paired">Устройства не были подключены</string>
     <string name="nopair">Устройство не подключено</string>
     <string name="not_connected">Вы не подключены к устройству</string>
     <string name="reply_label">Ответ</string>
