@@ -6,6 +6,7 @@ import android.bluetooth.BluetoothServerSocket;
 import android.bluetooth.BluetoothSocket;
 import android.content.Context;
 import android.content.Intent;
+import android.content.res.Resources;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -29,6 +30,8 @@ public class chatService {
         private static final UUID MY_UUID_INSECURE = UUID
                 .fromString("8ce255c0-200a-11e0-ac64-0800200c9a66");
 
+        private final Context mContext;
+
         // Member fields
         private final BluetoothAdapter bluetoothAdapter;
         private final Handler handler;
@@ -48,6 +51,7 @@ public class chatService {
         public chatService(Context context, Handler handler) {
             bluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
             state = STATE_NONE;
+            mContext = context;
 
             this.handler = handler;
         }
@@ -190,7 +194,8 @@ public class chatService {
         private void connectionFailed() {
             Message msg = handler.obtainMessage(MainActivity.MESSAGE_TOAST);
             Bundle bundle = new Bundle();
-            bundle.putString(MainActivity.TOAST, "Unable to connect device");
+
+            bundle.putString(MainActivity.TOAST, mContext.getResources().getString(R.string.unable));
             msg.setData(bundle);
             handler.sendMessage(msg);
 
@@ -201,7 +206,7 @@ public class chatService {
         private void connectionLost() {
             Message msg = handler.obtainMessage(MainActivity.MESSAGE_TOAST);
             Bundle bundle = new Bundle();
-            bundle.putString(MainActivity.TOAST, "Device connection was lost");
+            bundle.putString(MainActivity.TOAST, mContext.getResources().getString(R.string.dvlost));
             msg.setData(bundle);
             handler.sendMessage(msg);
 

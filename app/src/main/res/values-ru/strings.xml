@@ -11,7 +11,7 @@
     <string name="disconnect">Отключить</string>
     <string name="discoverable">Сделать видимым</string>
     <string name="file">Отправить Фото/Файл</string>
-    <string name="ing">\"Разработано N1kko777 (3734489@gmail.com). Спасибо за помощь: - IT School Samsung - gc986 (Gc986@list.ru) \"</string>
+    <string name="ing">Разработано N1kko777 (3734489@gmail.com). Спасибо за помощь:\n - IT School Samsung\n - gc986 (Gc986@list.ru)\n\n Поддержать разработчика: </string>
     <string name="insecure_connect">Подключить устройство</string>
     <string name="inеfo">О приложении</string>
     <string name="label">Ответ</string>
@@ -24,11 +24,20 @@
     <string name="scanning">Поиск устройств...</string>
     <string name="select_device">Выберите устройства для подключения</string>
     <string name="send">Отправить</string>
-    <string name="title_connected_to">"     Подключено к      <xliff:g id="device_name">%1$s</xliff:g>  "</string>
+    <string name="title_connected_to"> Подключено к      <xliff:g id="device_name">%1$s</xliff:g>  </string>
     <string name="title_connecting">Подключение...</string>
     <string name="title_not_connected">Не подключен</string>
     <string name="title_other_devices">Другие доступные устройства</string>
     <string name="title_paired_devices">Подключенные устройства</string>
     <string name="tost">Выберите доступное устройство</string>
     <string name="skip">Пропустить</string>
+    <string name="unable">Невозможно подключиться к устройству</string>
+    <string name="dvlost">Соединение потеряно</string>
+    <string name="help">Поддержка Рработчика</string>
+    <string-array name="reply_choices">
+        <item>Да</item>
+        <item>Нет</item>
+        <item>Может быть</item>
+    </string-array>
+    <string name="ory">Большое спасибо!!!</string>
 </resources>

@@ -16,7 +16,7 @@
     <string name="title_connecting">Connecting...</string>
 
     <string name="title_connected_to">
-    Connected to
+        Connected to
     <xliff:g id="device_name">%1$s</xliff:g>
 
 </string>
@@ -45,7 +45,7 @@
 
     <string name="tost">Choose visible devices</string>
 
-    <string name="ing">Created by N1kko777\n(3734489@gmail.com).\nThanks for help:\n- IT School Samsung\n- gc986 (Gc986@list.ru) </string>
+    <string name="ing">Created by N1kko777\n(3734489@gmail.com).\nThanks for help:\n- IT School Samsung\n- gc986 (Gc986@list.ru)\n\nDeveloper Support: </string>
 
     <string name="devor">Connected to </string>
 
@@ -64,6 +64,10 @@
     <string name="disconnect">Disconnect</string>
     <string name="label">Reply</string>
     <string name="skip">Skip</string>
+    <string name="unable">Unable to connect device</string>
+    <string name="dvlost">Device connection was lost</string>
+    <string name="help">Developer Support</string>
+    <string name="ory">Thanks so much!!!</string>
 
 
 </resources>
